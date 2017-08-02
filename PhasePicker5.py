@@ -230,19 +230,20 @@ def runPickers(detect_file):
 	pickp = []
 	picks = []
 	#detect_file = '20080731040120.LUYA.BHZ'
-	try:
-		trz_pol,trn_pol,tre_pol,trz0,trn0,tre0 = Get_traces(detect_file)
+	trz,trn,tre = [],[],[]
+	trz_pol,trn_pol,tre_pol,trz0,trn0,tre0 = Get_traces(detect_file)
 		for pick_choice in range(0,3):
 			pick_choice += 1
-			picksz_new,picksn_new,pickse_new,trz,trn,tre = GetPicks(trz_pol,trn_pol,tre_pol,trz0,trn0,tre0,pick_choice)
-			for p in picksz_new:
-				pickp.append(p)
-			for s in picksn_new:
-				picks.append(s)
-			for s in pickse_new:
-				picks.append(s)
-	except Exception:
-		sys.exc_clear()
+			try:
+				picksz_new,picksn_new,pickse_new,trz,trn,tre = GetPicks(trz_pol,trn_pol,tre_pol,trz0,trn0,tre0,pick_choice)
+				for p in picksz_new:
+					pickp.append(p)
+				for s in picksn_new:
+					picks.append(s)
+				for s in pickse_new:
+					picks.append(s)
+			except Exception:
+				sys.exc_clear()
 
 	#print(pickp)
 	#print(picks)
@@ -287,11 +288,16 @@ def runPickers(detect_file):
 		# write sac files
 	if len(trz)>0:
 		trz.write(dir_out+detect_file_z,format='SAC')
+	else:
+		trz0.write(dir_out+detect_file_z,format='SAC')
 	if len(trn)>0:
 		trn.write(dir_out+detect_file_n,format='SAC')
+	else:
+		trn0.write(dir_out+detect_file_n,format='SAC')
 	if len(tre)>0:	
 		tre.write(dir_out+detect_file_e,format='SAC')
-
+	else:
+		tre0.write(dir_out+detect_file_e,format='SAC')
 detect_file = '20080802075051.PWU.BHZ'
 runPickers(detect_file)
 print(detect_file)
